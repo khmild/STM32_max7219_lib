@@ -30,14 +30,14 @@ typedef enum{
 typedef enum{
     SHUTDOWN_MODE = 0,
     NORMAL_MODE = 1
-}Shutdown_reg;
+}ShutdownModes;
 
 typedef enum{
     NO_DECODE_7_0 = 0x00,
     CODE_B_FOR_0 = 0x01,
     CODE_B_FOR_3_TO_0 = 0x0f,
     CODE_B_FOR_7_TO_0 = 0xff
-}Decode;
+}DecodeModes;
 
 typedef enum{
     INTENS_MIN = 0x00,
@@ -46,13 +46,27 @@ typedef enum{
     INTENS_MAX = 0x0f
 }IntensityModes;
 
+typedef enum{
+    SYMBOL_MINUS = 0x0a,
+    SYMBOL_E = 0x0b,
+    SYMBOL_H = 0x0c,
+    SYMBOL_L = 0x0d,
+    SYMBOL_P = 0x0e
+}SpecialSymbols;
+
 class max7219
 {
 public:
     max7219(SPI_HandleTypeDef _spi, GPIO_TypeDef *_cs_port, uint8_t _cs_pin);
-    void printInt();
-    void printDigit(uint8_t digit, uint8_t value);
+    void printInt(const int32_t data);
+    void printDigit(DigitsAddr digit, uint8_t value);
+    void printSymbol(DigitsAddr digit, SpecialSymbols symbol);
+    void printDot(DigitsAddr digit);
+    void setBrightness(IntensityModes brightness);
+    void setDecodeMode(DecodeModes mode);
+    void setPowerMode(ShutdownModes mode);
     void clear();
+
 private:    
     void sendToAddr(uint8_t addr, uint8_t data);
     void Initialize();
